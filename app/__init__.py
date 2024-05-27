@@ -1,12 +1,12 @@
 from flask import Flask
 from pymongo import MongoClient
 from os import getenv
-from secrets import token_urlsafe
 
 MONGO_URI = getenv("MONGO_URI")
+SECRET_KEY = getenv("SECRET_KEY")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = token_urlsafe(16)
+app.config["SECRET_KEY"] = SECRET_KEY
 app.config["MONGO_URI"] = MONGO_URI
 
 client = MongoClient(app.config["MONGO_URI"])

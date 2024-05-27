@@ -18,7 +18,7 @@ def home():
         }
         todos.append(todo)
 
-    return render_template('todos.html', title='Home', todos=todos | [])
+    return render_template('todos.html', title='Home', todos=todos)
 
 
 @app.route("/new", methods=['GET', 'POST'])

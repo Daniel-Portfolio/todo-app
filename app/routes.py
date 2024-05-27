@@ -1,5 +1,3 @@
-from crypt import methods
-
 from bson import ObjectId
 from app import app
 from flask import redirect, render_template, request, flash, url_for
@@ -20,7 +18,7 @@ def home():
         }
         todos.append(todo)
 
-    return render_template('todos.html', title='Home', todos=todos)
+    return render_template('todos.html', title='Home', todos=todos | [])
 
 
 @app.route("/new", methods=['GET', 'POST'])

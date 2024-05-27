@@ -2,7 +2,7 @@ from crypt import methods
 
 from bson import ObjectId
 from app import app
-from flask import redirect, render_template, request, flash
+from flask import redirect, render_template, request, flash, url_for
 from .forms import TodoForm
 from app import db
 
@@ -10,7 +10,7 @@ from app import db
 @app.route('/')
 def home():
     todos = []
-    for td in db["todos"].find().sort('completed', -1):
+    for td in db["todos"].find().sort('completed'):
         td["_id"] = str(td["_id"])
         todo = {
             'title': td['title'],
@@ -49,7 +49,7 @@ def add_todo():
 
 @app.route("/todo/<string:_id>", methods=["GET", "POST"])
 def update(_id):
-    if request.methods == "POST":
+    if request.method == "POST":
         form = TodoForm(request.form)
 
         if not form.validate():

@@ -40,12 +40,6 @@ def add_todo():
         flash('Todo added successfully', 'success')
         return redirect('/')
 
-# @app.route("/delete/<string:_id>")
-# def delete(_id):
-#     db["todos"].delete_one({'_id': ObjectId(_id)})
-#     flash('Todo deleted successfully', 'success')
-#     return redirect('/')
-
 
 @app.route("/todo/<string:_id>", methods=["GET", "POST"])
 def update(_id):
@@ -72,3 +66,10 @@ def update(_id):
         form.completed.data = todo.get('completed', None)
 
         return render_template('upsert.html', title='Update Todo', form=form)
+
+
+@app.route("/delete/<string:_id>")
+def delete(_id):
+    db["todos"].delete_one({'_id': ObjectId(_id)})
+    flash('Todo deleted successfully', 'success')
+    return redirect('/')

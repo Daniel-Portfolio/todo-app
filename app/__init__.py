@@ -1,15 +1,17 @@
 from flask import Flask
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from dotenv import dotenv_values
 
-config = dotenv_values(".env.dev")
+cfg = dotenv_values(".env.dev")
+
 app = Flask(__name__)
-app.config["SECRET_KEY"] = config["SECRET_KEY"]
-app.config["MONGO_URI"] = f"mongodb://{config['MONGO_USER']
-                                       }:{config['MONGO_PWD']}@127.0.0.1:27017/todo"
+app.config["SECRET_KEY"] = cfg["SECRET_KEY"]
+app.config["MONGO_URI"] = f"mongodb://{cfg['MONGO_USER']}" \
+    f":{cfg['MONGO_PWD']}@127.0.0.1:27017/"
 
+print(app.config["MONGO_URI"])
 
-client = PyMongo(app)
-db = client.db
+client = MongoClient(app.config["MONGO_URI"])
+db = client[cfg["MONGO_DB"]]
 
 from app import routes

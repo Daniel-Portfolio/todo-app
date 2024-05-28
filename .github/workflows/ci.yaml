@@ -1,14 +1,11 @@
 name: CI
-
 on:
   push:
     branches:
         - main
-
 jobs:
     unit-tests:
       runs-on: ubuntu-latest
-
       steps:
           - name: Checkout repository
             uses: actions/checkout@v4
@@ -34,11 +31,13 @@ jobs:
           - name: Run tests
             run: pytest testing/*
 
-
+          # start compose file and run pytest testing/*
+          - name: Start services
+            run: docker-compose -f docker-compose.yml up -d
+            
     publish:
       runs-on: ubuntu-latest  
       needs: unit-tests
-
       steps:
           - name: Checkout repository
             uses: actions/checkout@v4
@@ -64,8 +63,7 @@ jobs:
             env:
               ECR_REGISTRY:  ${{ steps.login-ecr.outputs.registry }}
               ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-              # IMAGE_TAG: ${{ github.sha }}
+              IMAGE_TAG: latest
             run: |
-              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-              docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      
+              docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+              docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -1,4 +1,13 @@
+# compose only meant for local development and testing and is not intended for production use in the cluster.
 services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: pwd
+      MONGO_INITDB_DATABASE: todos
+
   app:
     build:
       context: .
@@ -7,22 +16,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MONGO_URI: ${MONGO_URI}
-      SECRET_KEY: ${SECRET_KEY}
+      MONGO_URI: mongodb://dev:pwd@mongo:27017/
+      SECRET_KEY: dioqu3980d32dnjc83
     depends_on:
       - mongo
     restart: on-failure
-    
-
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PWD}
-      MONGO_INITDB_DATABASE: ${MONGO_DB}
-    volumes:
-      - mongox:/data/db
-
-volumes:
-  mongox:

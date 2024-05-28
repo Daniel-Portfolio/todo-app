@@ -31,9 +31,11 @@ jobs:
           - name: Run tests
             run: pytest testing/*
 
-          # start compose file and run pytest testing/*
           - name: Start services
             run: docker-compose -f docker-compose.yml up -d
+
+          - name: Run e2e tests
+            run: ./e2e-tests.sh
             
     publish:
       runs-on: ubuntu-latest  

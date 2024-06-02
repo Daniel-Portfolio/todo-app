@@ -58,12 +58,13 @@ jobs:
           - name: Get version from commit tag
             id: version
             run: |
-              if [[ "$GITHUB_REF" == refs/tags/* ]]; then
-                TAG_NAME=${GITHUB_REF#refs/tags/}
+              if [ "${GITHUB_REF##*/}" != "${GITHUB_REF}" ]; then
+                echo "This is a tag: ${GITHUB_REF##*/}"
+                echo TAG::${GITHUB_REF##*/} >> "$GITHUB_OUTPUT"
               else
-                TAG_NAME="dev"
+                echo "This is not a tag, using default value"
+                echo TAG::dev >> "$GITHUB_OUTPUT"
               fi
-              echo "::set-output name=tag::$TAG_NAME"
 
           - name: Set up Docker Buildx
             uses: docker/setup-buildx-action@v2
@@ -85,7 +86,7 @@ jobs:
             env:
               ECR_REGISTRY:  ${{ steps.login-ecr.outputs.registry }}
               ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-              IMAGE_TAG: ${{ steps.version.outputs.tag }}
+              IMAGE_TAG: ${{ steps.version.outputs.TAG }}
             run: |
               docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
               docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -99,7 +100,7 @@ jobs:
           
           - name: update Charts.yaml
             run: |
-              sed -i 's/appVersion:.*/appVersion: "${{ steps.version.outputs.tag }}"/g' gitops/charts/todo-app/Chart.yaml
+              sed -i 's/appVersion:.*/appVersion: "${{ steps.version.outputs.TAG }}"/g' gitops/charts/todo-app/Chart.yaml
           
           - name: Commit changes
             env:
@@ -109,7 +110,7 @@ jobs:
               git config --local user.email "danirdd92@gmail.com"
               git config --local user.name "Daniel-Portfolio"
               git add gitops/charts/todo-app/Chart.yaml
-              git commit -m "bump appVersion in Chart.yaml to ${{ steps.version.outputs.tag }}"
+              git commit -m "bump appVersion in Chart.yaml to ${{ steps.version.outputs.TAG }}"
               git push
               
 

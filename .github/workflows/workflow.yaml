@@ -90,19 +90,18 @@ jobs:
             with:
               repository: 'Daniel-Portfolio/gitops'
               token: ${{ secrets.GH_TOKEN }}
-              path: 'gitops'
           
           - name: update Charts.yaml
             shell: bash
             run: |
-              sed -i 's/appVersion:.*/appVersion: "${{ needs.publish.outputs.tag }}"/g' gitops/charts/todo-app/Chart.yaml
+              sed -i 's/appVersion:.*/appVersion: "${{ needs.publish.outputs.tag }}"/g' ./charts/todo-app/Chart.yaml
           
           - name: Commit changes
             env:
               GH_TOKEN: ${{ secrets.GH_TOKEN }}
             run: |
-              git config --local user.email "danirdd92@gmail.com"
-              git config --local user.name "Daniel-Portfolio"
+              git config --global user.email "danirdd92@gmail.com"
+              git config --global user.name "Daniel-Portfolio"
               git commit -am "bump appVersion in Chart.yaml to ${{ needs.publish.outputs.tag }}"
               git push
               

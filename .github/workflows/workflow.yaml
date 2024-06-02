@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-    tests:
+    test:
       runs-on: ubuntu-latest
       if: github.event_name == 'pull_request'
       steps:
@@ -93,6 +93,7 @@ jobs:
               path: 'gitops'
           
           - name: update Charts.yaml
+            shell: bash
             run: |
               sed -i 's/appVersion:.*/appVersion: "${{ needs.publish.outputs.tag }}"/g' gitops/charts/todo-app/Chart.yaml
           

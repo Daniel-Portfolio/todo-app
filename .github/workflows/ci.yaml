@@ -93,7 +93,6 @@ jobs:
             env:
               GH_TOKEN: ${{ secrets.GH_TOKEN }}
             run: |
-              cd gitops
               git config --local user.email "danirdd92@gmail.com"
               git config --local user.name "Daniel-Portfolio"
               git add gitops/charts/todo-app/Chart.yaml

@@ -48,7 +48,7 @@ jobs:
             id: version
             run: |
               echo "GITHUB_REF: ${GITHUB_REF}"
-              if [[ "${GITHUB_REF}" == refs/tags/*]]; then
+              if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
                 echo "This is a tag: ${GITHUB_REF##*/}"
                 echo TAG::${GITHUB_REF##*/} >> "$GITHUB_OUTPUT"
               else

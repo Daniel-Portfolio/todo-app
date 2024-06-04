@@ -9,7 +9,8 @@ SECRET_KEY = getenv("SECRET_KEY")
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 app.config["MONGO_URI"] = MONGO_URI
-app.logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 client = MongoClient(app.config["MONGO_URI"])
 db = client['todos']
